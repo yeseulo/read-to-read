@@ -1,4 +1,4 @@
-import { authService } from 'firebaseSetting';
+import { authService, firebaseInstance } from 'firebaseSetting';
 import React, { useState } from 'react';
 
 const Auth = () => {
@@ -28,6 +28,19 @@ const Auth = () => {
 
   const onToggle = () => setNewUser((prevState) => !prevState);
 
+  const onSocialLogin = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    const { name } = e.target as HTMLInputElement;
+    let provider: any;
+    if (name === 'google') {
+      provider = new firebaseInstance.auth.GoogleAuthProvider();
+    } else if (name === 'github') {
+      provider = new firebaseInstance.auth.GithubAuthProvider();
+    }
+    await authService.signInWithPopup(provider);
+  };
+
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -52,8 +65,12 @@ const Auth = () => {
       </form>
       <span onClick={onToggle}>{isNewUser ? `Sign in` : `Sign up`}</span>
       <div>
-        <button type='button'>Continue with Google</button>
-        <button type='button'>Continue with Github</button>
+        <button name='google' onClick={onSocialLogin}>
+          Continue with Google
+        </button>
+        <button name='github' onClick={onSocialLogin}>
+          Continue with Github
+        </button>
       </div>
     </div>
   );
