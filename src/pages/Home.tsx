@@ -1,13 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { dbService } from 'firebaseSetting';
+interface ISentence {
+  id: string;
+  createdAt: number;
+  sentence: string;
+}
 
-const Home = () => {
+const Home = ({ user }:any ) => {
   const [sentence, setSentence] = useState('');
+  const [sentences, setSentences] = useState<any[]>([]);
+
+  const getSentences = async () => {
+    const data = await dbService.collection('sentences').get();
+    data.forEach((item) => {
+      const obj = {
+        ...item.data(),
+        id: item.id,
+      };
+      setSentences((prev) => [obj, ...prev]);
+    });
+  };
+
+  useEffect(() => {
+    getSentences();
+  }, []);
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await dbService.collection('sentences').add({
-      sentence,
+      text: sentence,
       createdAt: Date.now(),
+      creatorId: user.uid,
     });
     setSentence('');
   };
@@ -27,6 +50,13 @@ const Home = () => {
         />
         <button type='submit'>Save</button>
       </form>
+      {sentences.length > 0 && (
+        <ul>
+          {sentences.map((item) => (
+            <li key={item.id}>{item.text}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

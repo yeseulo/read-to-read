@@ -5,7 +5,7 @@ import Home from 'pages/Home';
 import Profile from 'pages/Profile';
 import Navigation from 'components/Navigation';
 
-const Router = ({ isLoggedIn }: any) => {
+const Router = ({ isLoggedIn, user }: any) => {
   return (
     <HashRouter>
       {isLoggedIn && <Navigation />}
@@ -13,7 +13,7 @@ const Router = ({ isLoggedIn }: any) => {
         {isLoggedIn ? (
           <>
             <Route exact path='/'>
-              <Home />
+              <Home user={user} />
             </Route>
             <Route exact path='/profile'>
               <Profile />
