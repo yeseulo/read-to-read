@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { dbService } from 'firebaseSetting';
+import Sentence from 'components/Sentence';
 interface ISentence {
   id: string;
   createdAt: number;
@@ -46,11 +47,11 @@ const Home = ({ user }:any ) => {
         <button type='submit'>Save</button>
       </form>
       {sentences.length > 0 && (
-        <ul>
+        <div>
           {sentences.map((item) => (
-            <li key={item.id}>{item.text}</li>
+            <Sentence key={item.id} sentence={item} isOwner={item.creatorId === user.uid} />
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
