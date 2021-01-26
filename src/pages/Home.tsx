@@ -10,19 +10,14 @@ const Home = ({ user }:any ) => {
   const [sentence, setSentence] = useState('');
   const [sentences, setSentences] = useState<any[]>([]);
 
-  const getSentences = async () => {
-    const data = await dbService.collection('sentences').get();
-    data.forEach((item) => {
-      const obj = {
-        ...item.data(),
-        id: item.id,
-      };
-      setSentences((prev) => [obj, ...prev]);
-    });
-  };
-
   useEffect(() => {
-    getSentences();
+    dbService.collection('sentences').onSnapshot((snapshot) => {
+      const list = snapshot.docs.map((item) => ({
+        id: item.id,
+        ...item.data(),
+      }));
+      setSentences(list);
+    });
   }, []);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
