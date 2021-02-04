@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { dbService } from 'firebaseSetting';
 import Sentence from 'components/Sentence';
-interface ISentence {
+
+interface SentenceInfo {
   id: string;
   createdAt: number;
-  sentence: string;
+  creatorId: string;
+  text: string;
 }
 
 const Home = ({ user }:any ) => {
-  const [sentence, setSentence] = useState('');
-  const [sentences, setSentences] = useState<any[]>([]);
+  const [sentence, setSentence] = useState<string>('');
+  const [sentences, setSentences] = useState<SentenceInfo[]>([]);
 
   useEffect(() => {
     dbService.collection('sentences').onSnapshot((snapshot) => {
       const list = snapshot.docs.map((item) => ({
         id: item.id,
-        ...item.data(),
+        createdAt: item.data().createdAt,
+        creatorId: item.data().creatorId,
+        text: item.data().text,
       }));
       setSentences(list);
     });

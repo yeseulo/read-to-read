@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { dbService } from 'firebaseSetting';
 
-const Sentence = ({ sentence, isOwner }) => {
+const Sentence = ({ sentence, isOwner }: any) => {
   const [edit, setEdit] = useState(false);
   const [newSentence, setNewSentence] = useState(sentence.text);
 
@@ -20,7 +20,7 @@ const Sentence = ({ sentence, isOwner }) => {
     setEdit(false);
   };
 
-  const onDelete = async (id) => {
+  const onDelete = async (id: number) => {
     const ok = window.confirm('Are you sure you want to delete this sentence?');
     if (ok) {
       await dbService.doc(`sentences/${id}`).delete();
