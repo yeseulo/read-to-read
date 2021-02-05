@@ -45,6 +45,9 @@ const Sentence = ({ sentence, isOwner }: any) => {
       ) : (
         <>
           {sentence.text}
+          {sentence.imageUrl && (
+            <img src={sentence.imageUrl} width='50px' height='50px' alt='Attached'/>
+          )}
           {isOwner && (
             <>
               <button onClick={toggleEdit}>Edit</button>
