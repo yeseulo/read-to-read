@@ -11,7 +11,12 @@ function App() {
     authService.onAuthStateChanged((user) => {
       if (user) {
         setIsLoggedIn(true);
-        setUser(user);
+        setUser({
+          uid: user.uid,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          updateProfile: (args: any) => user.updateProfile(args),
+        });
       } else {
         setIsLoggedIn(false);
       }
@@ -19,8 +24,26 @@ function App() {
     });
   }, []);
 
+  const refreshUser = () => {
+    const currentUser = authService.currentUser;
+    if ( currentUser ){
+      setUser({
+        uid: currentUser.uid,
+        displayName: currentUser.displayName,
+        photoURL: currentUser.photoURL,
+        updateProfile: (args: any) => currentUser.updateProfile(args),
+      });
+    }
+  }
+
   return (
-    <>{init ? <Router isLoggedIn={isLoggedIn} user={user} /> : 'Initailizing...'}</>
+    <>
+      {init ? (
+        <Router isLoggedIn={isLoggedIn} user={user} refreshUser={refreshUser} />
+      ) : (
+        'Initailizing...'
+      )}
+    </>
   );
 }
 
