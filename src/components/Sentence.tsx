@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { dbService } from 'firebaseSetting';
+import { dbService, storageService } from 'firebaseSetting';
 
 const Sentence = ({ sentence, isOwner }: any) => {
   const [edit, setEdit] = useState(false);
@@ -24,6 +24,7 @@ const Sentence = ({ sentence, isOwner }: any) => {
     const ok = window.confirm('Are you sure you want to delete this sentence?');
     if (ok) {
       await dbService.doc(`sentences/${id}`).delete();
+      await storageService.refFromURL(sentence.imageUrl).delete();
     }
   };
 
